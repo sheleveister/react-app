@@ -1,41 +1,21 @@
-import React, { Component } from 'react';
+import React from 'react';
 import ReactDOM from 'react-dom';
-import CardComponent from './card';
+import { Provider } from 'react-redux';
+import { Router, browserHistory } from 'react-router';
+import { syncHistoryWithStore } from 'react-router-redux';
+import configureStore from './store';
+import routes from './routes';
 
-class App extends Component {
-
-  constructor(props) {
-    super(props);
-
-    this.state = {
-      array: [
-        {
-          id: 1,
-          text: 'Card 1'
-        },
-        {
-          id: 2,
-          text: 'Card 2'
-        },
-        {
-          id: 3,
-          text: 'Card 3'
-        }
-      ]
-    };
-  }
-
-  render() {
-    return (
-      <div>
-        <h1>App component</h1>
-        <CardComponent array={ this.state.array } />
-      </div>
-    );
-  }
-}
+const store = configureStore();
+const history = syncHistoryWithStore(browserHistory, store);
 
 ReactDOM.render(
-  <App />,
-  document.getElementById('app')
+  (
+    <Provider store={ store }>
+      <Router history={ history }>
+        { routes }
+      </Router>
+    </Provider>
+  ),
+  document.querySelector('#app')
 );
