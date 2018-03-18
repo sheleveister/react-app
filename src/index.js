@@ -6,13 +6,30 @@ class App extends Component {
 
   constructor(props) {
     super(props);
+
+    this.state = {
+      array: [
+        {
+          id: 1,
+          text: 'Card 1'
+        },
+        {
+          id: 2,
+          text: 'Card 2'
+        },
+        {
+          id: 3,
+          text: 'Card 3'
+        }
+      ]
+    };
   }
 
   render() {
     return (
       <div>
         <h1>App component</h1>
-        <CardComponent item="App card name"/>
+        <CardComponent array={ this.state.array } />
       </div>
     );
   }
