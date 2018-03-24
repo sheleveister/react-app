@@ -1,29 +1,24 @@
-import React from 'react';
+import React, { PropTypes } from 'react';
 import Input from '../../components/ui/input/index';
 import { bindAll } from 'lodash';
+import { connect } from 'react-redux';
+import { addTodo } from './actions';
 
 import './styles.less';
 
-export default class HomePage extends React.Component {
+class HomePage extends React.Component {
 
   static path = '/';
+  static PropTypes = {
+    home: PropTypes.object.isRequired,
+    dispatch: PropTypes.func.isRequired
+  };
 
   constructor(props) {
     super(props);
 
     this.state = {
-      todoName: '',
-      todoList: [
-        {
-          id: 1,
-          name: 'Item 1'
-        },
-        {
-          id: 2,
-          name: 'Item 2'
-        }
-      ],
-      error: ''
+      todoName: ''
     };
 
     bindAll(this, ['renderTodoList', 'inputOnChange', 'addTodo']);
@@ -34,19 +29,11 @@ export default class HomePage extends React.Component {
   }
 
   addTodo() {
-    if (this.state.todoName === '') {
-      this.setState({ error: 'Field not should be empty' });
-      return;
-    }
-
-    const id = this.state.todoList.length + 1;
+    const { todoList } = this.props.home;
+    const id = todoList.length + 1;
     const name = this.state.todoName;
-
-    const { todoList } = this.state;
-    todoList.push( { id, name });
-
-    this.setState({ todoList });
-    this.setState({ todoName: '', error: '' });
+    this.props.dispatch( addTodo(id, name) );
+    this.setState({ todoName: '' });
   }
 
   renderTodoList(item, i) {
@@ -56,7 +43,8 @@ export default class HomePage extends React.Component {
   }
 
   render() {
-    const { todoName, todoList, error } = this.state;
+    const { todoName } = this.state;
+    const { todoList, error } = this.props.home;
 
     return (
       <div>
@@ -80,3 +68,11 @@ export default class HomePage extends React.Component {
   }
 
 }
+
+function mapStateToProps(state) {
+  return {
+    home: state.home
+  };
+}
+
+export default connect(mapStateToProps)(HomePage);
