@@ -2,7 +2,8 @@ import React, { PropTypes } from 'react';
 import Input from '../../components/ui/input/index';
 import { bindAll } from 'lodash';
 import { connect } from 'react-redux';
-import { addTodo } from './actions';
+import { addTodo, likeTodo } from './actions';
+import classname from 'classname';
 
 import './styles.less';
 
@@ -36,9 +37,21 @@ class HomePage extends React.Component {
     this.setState({ todoName: '' });
   }
 
+  likeTodo(item) {
+    this.props.dispatch( likeTodo(item) );
+  }
+
   renderTodoList(item, i) {
+    const likeClasses = classname('item__btn', 'btn', 'btn-danger', {
+      'is-liked': item.liked
+    });
     return (
-      <li key={ i }>{ item.name }</li>
+      <li key={ i } className="item">
+        <span className="item__name">{ item.name }</span>
+        <button className="item__btn btn btn-success">Edit</button>
+        <button className={ likeClasses }
+          onClick={ this.likeTodo.bind(this, item) }>Like</button>
+      </li>
     );
   }
 
